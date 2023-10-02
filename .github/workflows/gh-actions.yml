@@ -15,6 +15,9 @@ jobs:
       - name: Building and checkout etc.
         working-directory: ../
         run: |
+          echo "listing down folder structure"
+          ls -R  # Recursively list all files and directories in the working
+          echo "listed down all"
           yarn build
           git checkout gh-pages
           git rm -rf .
