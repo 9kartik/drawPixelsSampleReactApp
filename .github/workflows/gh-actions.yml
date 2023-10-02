@@ -1,0 +1,20 @@
+name: GitHub Action to deploy the dist folder on gh-pages
+run-name: ${{ github.actor }} is doing this
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: yarn build
+
+      - run: git checkout gh-pages
+      - run: git rm -rf .
+
+      - run: git checkout origin/main -- dist/*
+
+      - run: mv dist/* .
+      - run: git add .
+      - run: git commit -m "built"
+
+      - run: git push -u origin gh-pages
+      - run: echo "🍏 This job's status is ${{ job.status }}."
