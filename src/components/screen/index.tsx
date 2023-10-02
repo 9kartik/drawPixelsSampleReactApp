@@ -14,6 +14,6 @@
 //     }
 // }
 
-export const Screen = ({getClickPosition}: {getClickPosition: (e: React.MouseEvent) => void}) =>{
-    return <main onMouseMove={getClickPosition} style={{width:'100%',height:'1000px'}}></main>
+export const Screen = ({getClickPosition}: {getClickPosition: (e: React.MouseEvent | React.TouchEvent) => void}) =>{
+    return <main onMouseMove={getClickPosition} onTouchMove={getClickPosition} style={{width:'100%',height:'1000px'}}></main>
 }

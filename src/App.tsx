@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { Screen, Dot } from './components'
 import './App.css'
 import { useUndoRedo } from './hooks/undo-redo';
+import { memoisedDesktopCheck } from './utils/detectDesktop';
 
 interface Dot<T>{
   x: T;
@@ -13,8 +14,13 @@ function App() {
   const [redoList, setRedoList] = useState<typeof listOfPoints>([]);
 
   console.log('redraw');
-  const mouseClickedHere = useCallback((e: React.MouseEvent) =>  {
-    setListOfPoints(listOfPoints.concat({x:e.clientX,y:e.clientY}))
+  const mouseClickedHere = useCallback((e: React.MouseEvent | React.TouchEvent) =>  {
+    if(e.type === 'mousemove')
+      {setListOfPoints(listOfPoints.concat({x:(e as React.MouseEvent).clientX,y:(e as React.MouseEvent).clientY}))}
+    if(e.type === 'touchmove')
+      { [...(e as React.TouchEvent).nativeEvent.changedTouches].forEach((touch) => {
+        setListOfPoints(points => points.concat({x:touch.clientX,y: touch.clientY}))
+      })}
     setRedoList([]);
   }, [listOfPoints]);
 
@@ -39,7 +45,7 @@ function App() {
       {listOfPoints.map(({x, y}, ind) => <Dot key={ind} size={Math.random() | 0} left={x} top={y}/>)}
       <button onClick={undo} disabled={!listOfPoints.length}>Undo</button>
       <button onClick={redo} disabled={!redoList.length}>Redo</button>
-      {/* <main style={{width:'100%', height:'1000px'}} onClick={mouseClickedHere}></main> */}
+      {memoisedDesktopCheck() && <span> Press command+z for undo, command+shift+z for redo </span>}
       <Screen getClickPosition={mouseClickedHere} />
     </>
   )
