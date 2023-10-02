@@ -5,16 +5,24 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: yarn build
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - run: git checkout gh-pages
-      - run: git rm -rf .
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: |
+        yarn build
 
-      - run: git checkout origin/main -- dist/*
+        git checkout gh-pages
+        git rm -rf .
 
-      - run: mv dist/* .
-      - run: git add .
-      - run: git commit -m "built"
+        git checkout origin/main -- dist/*
 
-      - run: git push -u origin gh-pages
+        mv dist/* .
+        git add .
+        git commit -m "built"
+
+        git push -u origin gh-pages
       - run: echo "🍏 This job's status is ${{ job.status }}."
