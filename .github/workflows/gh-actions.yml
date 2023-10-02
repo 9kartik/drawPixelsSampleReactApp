@@ -12,6 +12,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14
+      - name: Building and checkout etc.
+        working-directory: ../
       - run: |
           yarn build
           git checkout gh-pages
